@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoleMate - Sign Up</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:linear-gradient(145deg,#e9eff7 0%,#f6f7fb 55%,#fcf9f3 100%);
+  min-height:100vh;
+  color:#1f2937;
+}
+
+.header{
+  background:#1f2937;
+  color:white;
+  padding:20px 60px 18px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  display:flex;
+  align-items:center;
+}
+
+.home-link{
+  display:inline-flex;
+  flex-direction:column;
+  text-decoration:none;
+  color:inherit;
+}
+
+.header h1{
+  font-size:3rem;
+  margin-bottom:2px;
+}
+
+.header p{
+  color:#cbd5e1;
+  margin-top:2px;
+  font-size:1rem;
+}
+
+.signup-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:calc(100vh - 100px);
+  padding:20px;
+}
+
+.signup-box{
+  background:white;
+  padding:40px;
+  border-radius:18px;
+  width:100%;
+  max-width:420px;
+  box-shadow:0 20px 40px rgba(15,23,42,0.12);
+}
+
+.signup-box h2{
+  margin-bottom:25px;
+  text-align:center;
+}
+
+.input-group{
+  margin-bottom:18px;
+}
+
+.input-group label{
+  display:block;
+  margin-bottom:6px;
+  font-weight:600;
+}
+
+.input-group input{
+  width:100%;
+  height:44px;
+  padding:0 12px;
+  border-radius:10px;
+  border:1px solid #cbd5e1;
+  font-size:1rem;
+}
+
+.input-group input:focus{
+  outline:none;
+  border-color:#5f7dff;
+  box-shadow:0 0 0 3px rgba(95,125,255,0.15);
+}
+
+.btn{
+  width:100%;
+  padding:12px;
+  background:linear-gradient(135deg,#5f7dff 0%,#6b4fc6 100%);
+  color:white;
+  border:none;
+  border-radius:12px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+.login{
+  text-align:center;
+  margin-top:18px;
+  font-size:0.9rem;
+}
+
+.login a{
+  color:#5f7dff;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.login a:hover{
+  text-decoration:underline;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const supabaseUrl = "https://lhkfbcqdgmaofkcdwdbg.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxoa2ZiY3FkZ21hb2ZrY2R3ZGJnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzAyNjEsImV4cCI6MjA5MTAwNjI2MX0.NHfla9DmboaT4J-tJcpCp2pQMXMtNmyNki65fIRdXIc";
+const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+async function signUp(){
+  const email = document.querySelectorAll("input")[0].value;
+  const password = document.querySelectorAll("input")[1].value;
+  const confirm = document.querySelectorAll("input")[2].value;
+
+  if(password !== confirm){
+    alert("Passwords do not match");
+    return;
+  }
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password
+  });
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  await supabaseClient.from("profiles").insert({
+    id: data.user.id,
+    email: email
+  });
+
+  alert("Account created!");
+  window.location.href = "login.html";
+}
+</script>
+
+</head>
+
+<body>
+
+<div class="header">
+  <a href="index.html" class="home-link">
+    <h1>SoleMate</h1>
+    <p>Find the perfect shoes for your feet</p>
+  </a>
+</div>
+
+<div class="signup-container">
+  <div class="signup-box">
+    <h2>Sign Up</h2>
+
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" placeholder="Enter your email">
+    </div>
+
+    <div class="input-group">
+      <label>Password</label>
+      <input type="password" placeholder="Create a password">
+    </div>
+
+    <div class="input-group">
+      <label>Confirm Password</label>
+      <input type="password" placeholder="Confirm your password">
+    </div>
+
+    <button class="btn" onclick="signUp()">Create Account</button>
+
+    <div class="login">
+      Already have an account? 
+      <a href="login.html">Login</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
